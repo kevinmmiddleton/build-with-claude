@@ -1,205 +1,41 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="1200" height="400">
-  <defs>
-    <style>
-      .block { fill: #e8845c; }
-      .block-shadow { fill: #c4623a; }
-      .bg { fill: #1a1a2e; }
-    </style>
-  </defs>
+  <rect width="1200" height="400" fill="#1e1e2e" rx="12"/>
 
-  <!-- Background -->
-  <rect width="1200" height="400" class="bg" rx="12"/>
-
-  <!-- ============================================================ -->
-  <!-- BLOCK LETTER FONT: "BUILD WITH" (row 1) -->
-  <!-- Each letter is ~60px wide, built from 8x8 blocks (size 8) -->
-  <!-- ============================================================ -->
-  <g transform="translate(60, 40) scale(0.9)">
-
-    <!-- B -->
-    <g transform="translate(0, 0)">
-      <rect class="block" x="0" y="0" width="8" height="56"/>
-      <rect class="block" x="8" y="0" width="32" height="8"/>
-      <rect class="block" x="40" y="8" width="8" height="16"/>
-      <rect class="block" x="8" y="24" width="32" height="8"/>
-      <rect class="block" x="40" y="32" width="8" height="16"/>
-      <rect class="block" x="8" y="48" width="32" height="8"/>
-    </g>
-
-    <!-- U -->
-    <g transform="translate(60, 0)">
-      <rect class="block" x="0" y="0" width="8" height="48"/>
-      <rect class="block" x="40" y="0" width="8" height="48"/>
-      <rect class="block" x="8" y="48" width="32" height="8"/>
-    </g>
-
-    <!-- I -->
-    <g transform="translate(120, 0)">
-      <rect class="block" x="0" y="0" width="32" height="8"/>
-      <rect class="block" x="12" y="8" width="8" height="40"/>
-      <rect class="block" x="0" y="48" width="32" height="8"/>
-    </g>
-
-    <!-- L -->
-    <g transform="translate(165, 0)">
-      <rect class="block" x="0" y="0" width="8" height="56"/>
-      <rect class="block" x="8" y="48" width="32" height="8"/>
-    </g>
-
-    <!-- D -->
-    <g transform="translate(215, 0)">
-      <rect class="block" x="0" y="0" width="8" height="56"/>
-      <rect class="block" x="8" y="0" width="24" height="8"/>
-      <rect class="block" x="32" y="8" width="8" height="8"/>
-      <rect class="block" x="40" y="16" width="8" height="24"/>
-      <rect class="block" x="32" y="40" width="8" height="8"/>
-      <rect class="block" x="8" y="48" width="24" height="8"/>
-    </g>
-
-    <!-- (space) -->
-
-    <!-- W -->
-    <g transform="translate(310, 0)">
-      <rect class="block" x="0" y="0" width="8" height="48"/>
-      <rect class="block" x="48" y="0" width="8" height="48"/>
-      <rect class="block" x="8" y="48" width="16" height="8"/>
-      <rect class="block" x="32" y="48" width="16" height="8"/>
-      <rect class="block" x="20" y="32" width="16" height="8"/>
-      <rect class="block" x="24" y="24" width="8" height="8"/>
-    </g>
-
-    <!-- I -->
-    <g transform="translate(375, 0)">
-      <rect class="block" x="0" y="0" width="32" height="8"/>
-      <rect class="block" x="12" y="8" width="8" height="40"/>
-      <rect class="block" x="0" y="48" width="32" height="8"/>
-    </g>
-
-    <!-- T -->
-    <g transform="translate(420, 0)">
-      <rect class="block" x="0" y="0" width="48" height="8"/>
-      <rect class="block" x="20" y="8" width="8" height="48"/>
-    </g>
-
-    <!-- H -->
-    <g transform="translate(480, 0)">
-      <rect class="block" x="0" y="0" width="8" height="56"/>
-      <rect class="block" x="40" y="0" width="8" height="56"/>
-      <rect class="block" x="8" y="24" width="32" height="8"/>
-    </g>
-
+  <!-- BUILD WITH -->
+  <g fill="#e8845c" font-family="Menlo, Monaco, 'Courier New', monospace" font-size="9.5">
+    <text x="55" y="38" xml:space="preserve">██████╗ ██╗   ██╗██╗██╗     ██████╗     ██╗    ██╗██╗████████╗██╗  ██╗</text>
+    <text x="55" y="49" xml:space="preserve">██╔══██╗██║   ██║██║██║     ██╔══██╗    ██║    ██║██║╚══██╔══╝██║  ██║</text>
+    <text x="55" y="60" xml:space="preserve">██████╔╝██║   ██║██║██║     ██║  ██║    ██║ █╗ ██║██║   ██║   ███████║</text>
+    <text x="55" y="71" xml:space="preserve">██╔══██╗██║   ██║██║██║     ██║  ██║    ██║███╗██║██║   ██║   ██╔══██║</text>
+    <text x="55" y="82" xml:space="preserve">██████╔╝╚██████╔╝██║███████╗██████╔╝    ╚███╔███╔╝██║   ██║   ██║  ██║</text>
+    <text x="55" y="93" xml:space="preserve">╚═════╝  ╚═════╝ ╚═╝╚══════╝╚═════╝      ╚══╝╚══╝ ╚═╝   ╚═╝   ╚═╝  ╚═╝</text>
   </g>
 
-  <!-- ============================================================ -->
-  <!-- BLOCK LETTER FONT: "CLAUDE CODE" (row 2) -->
-  <!-- ============================================================ -->
-  <g transform="translate(60, 120) scale(1.35)">
-
-    <!-- C -->
-    <g transform="translate(0, 0)">
-      <rect class="block" x="8" y="0" width="32" height="8"/>
-      <rect class="block" x="0" y="8" width="8" height="40"/>
-      <rect class="block" x="8" y="48" width="32" height="8"/>
-    </g>
-
-    <!-- L -->
-    <g transform="translate(55, 0)">
-      <rect class="block" x="0" y="0" width="8" height="56"/>
-      <rect class="block" x="8" y="48" width="32" height="8"/>
-    </g>
-
-    <!-- A -->
-    <g transform="translate(105, 0)">
-      <rect class="block" x="8" y="0" width="24" height="8"/>
-      <rect class="block" x="0" y="8" width="8" height="48"/>
-      <rect class="block" x="40" y="8" width="8" height="48"/>
-      <rect class="block" x="8" y="24" width="32" height="8"/>
-    </g>
-
-    <!-- U -->
-    <g transform="translate(160, 0)">
-      <rect class="block" x="0" y="0" width="8" height="48"/>
-      <rect class="block" x="40" y="0" width="8" height="48"/>
-      <rect class="block" x="8" y="48" width="32" height="8"/>
-    </g>
-
-    <!-- D -->
-    <g transform="translate(215, 0)">
-      <rect class="block" x="0" y="0" width="8" height="56"/>
-      <rect class="block" x="8" y="0" width="24" height="8"/>
-      <rect class="block" x="32" y="8" width="8" height="8"/>
-      <rect class="block" x="40" y="16" width="8" height="24"/>
-      <rect class="block" x="32" y="40" width="8" height="8"/>
-      <rect class="block" x="8" y="48" width="24" height="8"/>
-    </g>
-
-    <!-- E -->
-    <g transform="translate(270, 0)">
-      <rect class="block" x="0" y="0" width="8" height="56"/>
-      <rect class="block" x="8" y="0" width="32" height="8"/>
-      <rect class="block" x="8" y="24" width="24" height="8"/>
-      <rect class="block" x="8" y="48" width="32" height="8"/>
-    </g>
-
-    <!-- (space) -->
-
-    <!-- C -->
-    <g transform="translate(355, 0)">
-      <rect class="block" x="8" y="0" width="32" height="8"/>
-      <rect class="block" x="0" y="8" width="8" height="40"/>
-      <rect class="block" x="8" y="48" width="32" height="8"/>
-    </g>
-
-    <!-- O -->
-    <g transform="translate(410, 0)">
-      <rect class="block" x="8" y="0" width="24" height="8"/>
-      <rect class="block" x="0" y="8" width="8" height="40"/>
-      <rect class="block" x="40" y="8" width="8" height="40"/>
-      <rect class="block" x="8" y="48" width="24" height="8"/>
-    </g>
-
-    <!-- D -->
-    <g transform="translate(465, 0)">
-      <rect class="block" x="0" y="0" width="8" height="56"/>
-      <rect class="block" x="8" y="0" width="24" height="8"/>
-      <rect class="block" x="32" y="8" width="8" height="8"/>
-      <rect class="block" x="40" y="16" width="8" height="24"/>
-      <rect class="block" x="32" y="40" width="8" height="8"/>
-      <rect class="block" x="8" y="48" width="24" height="8"/>
-    </g>
-
-    <!-- E -->
-    <g transform="translate(520, 0)">
-      <rect class="block" x="0" y="0" width="8" height="56"/>
-      <rect class="block" x="8" y="0" width="32" height="8"/>
-      <rect class="block" x="8" y="24" width="24" height="8"/>
-      <rect class="block" x="8" y="48" width="32" height="8"/>
-    </g>
-
-    <!-- Blinking cursor -->
-    <rect x="568" y="0" width="8" height="56" fill="#e8845c">
-      <animate attributeName="opacity" values="1;0;1" dur="1.2s" repeatCount="indefinite"/>
-    </rect>
-
+  <!-- CLAUDE CODE -->
+  <g fill="#e8845c" font-family="Menlo, Monaco, 'Courier New', monospace" font-size="13">
+    <text x="55" y="112" xml:space="preserve"> ██████╗██╗      █████╗ ██╗   ██╗██████╗ ███████╗     ██████╗ ██████╗ ██████╗ ███████╗</text>
+    <text x="55" y="127" xml:space="preserve">██╔════╝██║     ██╔══██╗██║   ██║██╔══██╗██╔════╝    ██╔════╝██╔═══██╗██╔══██╗██╔════╝</text>
+    <text x="55" y="142" xml:space="preserve">██║     ██║     ███████║██║   ██║██║  ██║█████╗      ██║     ██║   ██║██║  ██║█████╗  </text>
+    <text x="55" y="157" xml:space="preserve">██║     ██║     ██╔══██║██║   ██║██║  ██║██╔══╝      ██║     ██║   ██║██║  ██║██╔══╝  </text>
+    <text x="55" y="172" xml:space="preserve">╚██████╗███████╗██║  ██║╚██████╔╝██████╔╝███████╗    ╚██████╗╚██████╔╝██████╔╝███████╗</text>
+    <text x="55" y="187" xml:space="preserve"> ╚═════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝     ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝</text>
   </g>
+
+  <!-- Blinking cursor -->
+  <rect x="725" y="175" width="13" height="15" fill="#e8845c" rx="1">
+    <animate attributeName="opacity" values="1;0;1" dur="1.2s" repeatCount="indefinite"/>
+  </rect>
 
   <!-- Tagline -->
-  <text x="70" y="320" fill="#8b949e" font-family="'SF Mono', Menlo, Monaco, Consolas, monospace" font-size="18">Build apps from your phone. No coding experience needed.</text>
-
-  <!-- Flow diagram -->
-  <g transform="translate(70, 348)">
-    <rect x="0" y="0" width="100" height="28" rx="14" fill="#1f2937" stroke="#374151" stroke-width="1"/>
-    <text x="50" y="18" text-anchor="middle" fill="#e8845c" font-family="'SF Mono', Menlo, monospace" font-size="11" font-weight="600">📱 Phone</text>
-
-    <text x="115" y="18" fill="#4b5563" font-family="'SF Mono', monospace" font-size="14">→</text>
-
-    <rect x="132" y="0" width="120" height="28" rx="14" fill="#1f2937" stroke="#374151" stroke-width="1"/>
-    <text x="192" y="18" text-anchor="middle" fill="#e8845c" font-family="'SF Mono', Menlo, monospace" font-size="11" font-weight="600">🤖 Claude</text>
-
-    <text x="267" y="18" fill="#4b5563" font-family="'SF Mono', monospace" font-size="14">→</text>
-
-    <rect x="284" y="0" width="110" height="28" rx="14" fill="#1f2937" stroke="#374151" stroke-width="1"/>
-    <text x="339" y="18" text-anchor="middle" fill="#28c840" font-family="'SF Mono', Menlo, monospace" font-size="11" font-weight="600">🌐 Live App</text>
+  <text x="55" y="232" fill="#8b949e" font-family="Menlo, Monaco, 'Courier New', monospace" font-size="15">Build apps from your phone. No coding experience needed.</text>
+  <g transform="translate(55, 262)">
+    <rect x="0" y="0" width="100" height="26" rx="13" fill="#1f2937" stroke="#374151" stroke-width="1"/>
+    <text x="50" y="17" text-anchor="middle" fill="#e8845c" font-family="Menlo, monospace" font-size="11" font-weight="600">📱 Phone</text>
+    <text x="115" y="17" fill="#4b5563" font-family="Menlo, monospace" font-size="14">→</text>
+    <rect x="132" y="0" width="120" height="26" rx="13" fill="#1f2937" stroke="#374151" stroke-width="1"/>
+    <text x="192" y="17" text-anchor="middle" fill="#e8845c" font-family="Menlo, monospace" font-size="11" font-weight="600">🤖 Claude</text>
+    <text x="267" y="17" fill="#4b5563" font-family="Menlo, monospace" font-size="14">→</text>
+    <rect x="284" y="0" width="110" height="26" rx="13" fill="#1f2937" stroke="#374151" stroke-width="1"/>
+    <text x="339" y="17" text-anchor="middle" fill="#28c840" font-family="Menlo, monospace" font-size="11" font-weight="600">🌐 Live App</text>
   </g>
-
 </svg>
