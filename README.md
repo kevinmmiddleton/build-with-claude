@@ -13,7 +13,7 @@ This guide walks you through setting up Claude Code with Telegram so you can des
 Open Terminal on your Mac and paste this:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/kevinmmiddleton/build-with-claude/main/setup.sh | bash
+bash <(curl -fsSL https://raw.githubusercontent.com/kevinmmiddleton/build-with-claude/main/setup.sh)
 ```
 
 This single command installs everything you need. When it's done, follow the on-screen instructions.
@@ -71,7 +71,7 @@ Open Terminal. It's in your Applications > Utilities folder, or just search for 
 Paste this and press Enter:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/kevinmmiddleton/build-with-claude/main/setup.sh | bash
+bash <(curl -fsSL https://raw.githubusercontent.com/kevinmmiddleton/build-with-claude/main/setup.sh)
 ```
 
 The script will:

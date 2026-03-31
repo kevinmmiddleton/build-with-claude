@@ -5,8 +5,11 @@
 # A friendly, step-by-step guide that installs everything you need to build
 # apps from your phone using Claude Code + Telegram.
 #
-# Usage:
-#   curl -fsSL https://raw.githubusercontent.com/kevinmmiddleton/build-with-claude/main/setup.sh | bash
+# Usage (recommended — downloads and runs):
+#   bash <(curl -fsSL https://raw.githubusercontent.com/kevinmmiddleton/build-with-claude/main/setup.sh)
+#
+# Or if you've cloned the repo:
+#   bash setup.sh
 # ============================================================================
 
 set -e
@@ -20,7 +23,7 @@ DIM='\033[2m'
 BOLD='\033[1m'
 NC='\033[0m'
 
-TOTAL_STEPS=7
+TOTAL_STEPS=8
 CURRENT_STEP=0
 
 # ---------------------------------------------------------------------------
@@ -54,11 +57,13 @@ header() {
   echo ""
 }
 
+# Read from the real keyboard, not from a pipe
+# This is critical when running via: bash <(curl ...)
 wait_for_user() {
   echo ""
   echo -e "  ${YELLOW}Ready to continue? Press Enter.${NC}"
   echo -e "  ${DIM}(or type 'q' to quit and come back later)${NC}"
-  read -r response
+  read -r response </dev/tty
   if [[ "$response" == "q" || "$response" == "Q" ]]; then
     echo ""
     echo -e "  ${BLUE}No problem! Run this script again anytime to pick up where you left off.${NC}"
@@ -67,8 +72,9 @@ wait_for_user() {
   fi
 }
 
-explain() {
-  echo -e "  ${DIM}$1${NC}"
+ask_user() {
+  read -r response </dev/tty
+  echo "$response"
 }
 
 success() {
@@ -151,13 +157,23 @@ if xcode-select -p &>/dev/null; then
   teaching_moment "These were already on your machine — maybe from a previous setup.\n  Either way, you're good to go."
 else
   echo -e "  ${YELLOW}Installing now...${NC}"
-  echo -e "  ${YELLOW}A popup may appear on your screen. Click 'Install' and wait.${NC}"
-  echo -e "  ${YELLOW}This can take a few minutes.${NC}"
+  echo -e "  ${YELLOW}A popup will appear on your screen. Click 'Install' and wait.${NC}"
+  echo -e "  ${YELLOW}This can take 5-10 minutes — that's normal.${NC}"
   echo ""
   xcode-select --install 2>/dev/null || true
   echo ""
-  echo -e "  ${YELLOW}⏳ When the installation finishes, press Enter here.${NC}"
-  read -r
+  echo -e "  ${YELLOW}⏳ Waiting for the installation to finish...${NC}"
+  echo -e "  ${YELLOW}   When the popup says 'The software was installed', press Enter here.${NC}"
+  echo ""
+  read -r </dev/tty
+  # Verify it actually installed
+  if xcode-select -p &>/dev/null; then
+    success "Developer tools installed!"
+  else
+    echo -e "  ${RED}Hmm, it doesn't look like the installation finished.${NC}"
+    echo -e "  ${RED}Try running this script again after the install completes.${NC}"
+    exit 1
+  fi
   teaching_moment "You just installed Git and other developer basics.\n  Git is like Google Docs version history, but for code.\n  Every change gets saved, and you can always go back."
 fi
 
@@ -245,20 +261,91 @@ fi
 wait_for_user
 
 # ============================================================================
-# STEP 4: Terminal Shortcuts
+# STEP 4: Set Up GitHub
 # ============================================================================
 CURRENT_STEP=4
 clear_screen
 header
 
-echo -e "  ${BOLD}Step 4: Making Your Life Easier${NC}"
+echo -e "  ${BOLD}Step 4: Set Up GitHub${NC}"
+echo ""
+echo -e "  GitHub is where your code lives online. Think of it as"
+echo -e "  Google Drive for code — it stores everything safely and"
+echo -e "  lets you access it from anywhere."
+echo ""
+echo -e "  When Claude builds your app, it pushes the code to GitHub."
+echo -e "  Then Vercel reads from GitHub and puts your app online."
+echo ""
+echo -e "  ${BOLD}You → Claude → GitHub → Vercel → Live app${NC}"
+echo ""
+
+if command -v gh &>/dev/null && gh auth status &>/dev/null 2>&1; then
+  success "GitHub CLI is installed and you're logged in!"
+  teaching_moment "You're already set up with GitHub. Claude can push\n  code on your behalf."
+else
+  echo -e "  We need to install the GitHub CLI (a tool that lets Claude"
+  echo -e "  push code to GitHub without you having to do it manually)."
+  echo ""
+
+  if ! command -v gh &>/dev/null; then
+    echo -e "  ${YELLOW}Installing GitHub CLI...${NC}"
+    echo ""
+    # Try Homebrew first, fall back to direct download
+    if command -v brew &>/dev/null; then
+      brew install gh 2>/dev/null || true
+    else
+      # Install via the official script
+      curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg 2>/dev/null || {
+        echo -e "  ${YELLOW}Let's install Homebrew first (a package manager for Mac)...${NC}"
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/tty
+        eval "$(/opt/homebrew/bin/brew shellenv)" 2>/dev/null || eval "$(/usr/local/bin/brew shellenv)" 2>/dev/null || true
+        brew install gh
+      }
+    fi
+    success "GitHub CLI installed!"
+  fi
+
+  echo ""
+  echo -e "  ${BOLD}Now let's log in to GitHub.${NC}"
+  echo ""
+  echo -e "  If you don't have a GitHub account yet, go to ${BOLD}github.com${NC}"
+  echo -e "  and create one first. It's free."
+  echo ""
+  echo -e "  ${YELLOW}When you're ready, press Enter and follow the login prompts.${NC}"
+  read -r </dev/tty
+
+  gh auth login </dev/tty || {
+    echo ""
+    echo -e "  ${YELLOW}No worries if that didn't work. You can always log in later by typing:${NC}"
+    echo -e "  ${GREEN}gh auth login${NC}"
+  }
+
+  if gh auth status &>/dev/null 2>&1; then
+    success "Logged in to GitHub!"
+    teaching_moment "Claude can now push code to GitHub on your behalf.\n  Every app you build will have its own 'repository' (folder)\n  on GitHub. You can see all your projects at github.com."
+  else
+    echo ""
+    teaching_moment "GitHub login didn't complete, but that's okay.\n  You can do it later by typing: gh auth login\n  Claude will remind you if it needs GitHub access."
+  fi
+fi
+
+wait_for_user
+
+# ============================================================================
+# STEP 5: Terminal Shortcuts
+# ============================================================================
+CURRENT_STEP=5
+clear_screen
+header
+
+echo -e "  ${BOLD}Step 5: Making Your Life Easier${NC}"
 echo ""
 echo -e "  We're going to do three small things:"
 echo ""
 echo -e "  ${BOLD}a)${NC} Add Terminal to your Dock"
 echo -e "     ${DIM}So you can find it without searching${NC}"
 echo ""
-echo -e "  ${BOLD}b)${NC} Create keyboard shortcuts"
+echo -e "  ${BOLD}b)${NC} Create shortcuts"
 echo -e "     ${DIM}Instead of typing long commands, you'll have:${NC}"
 echo -e "     ${GREEN}start-claude${NC}  → starts Claude with Telegram"
 echo -e "     ${GREEN}update-claude${NC} → updates Claude Code"
@@ -287,6 +374,13 @@ if ! grep -q 'BUN_INSTALL' "$ZSHRC" 2>/dev/null; then
   echo '# Bun (JavaScript runtime for Claude Code)' >> "$ZSHRC"
   echo 'export BUN_INSTALL="$HOME/.bun"' >> "$ZSHRC"
   echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> "$ZSHRC"
+fi
+
+# Add Homebrew to PATH if installed
+if [ -d "/opt/homebrew/bin" ] && ! grep -q '/opt/homebrew/bin/brew' "$ZSHRC" 2>/dev/null; then
+  echo '' >> "$ZSHRC"
+  echo '# Homebrew' >> "$ZSHRC"
+  echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$ZSHRC"
 fi
 
 if ! grep -q 'update-claude' "$ZSHRC" 2>/dev/null; then
@@ -320,13 +414,13 @@ teaching_moment "We edited a file called .zshrc — that's a settings file\n  fo
 wait_for_user
 
 # ============================================================================
-# STEP 5: Keep Your Mac Awake
+# STEP 6: Keep Your Mac Awake
 # ============================================================================
-CURRENT_STEP=5
+CURRENT_STEP=6
 clear_screen
 header
 
-echo -e "  ${BOLD}Step 5: Keep Your Mac Awake${NC}"
+echo -e "  ${BOLD}Step 6: Keep Your Mac Awake${NC}"
 echo ""
 echo -e "  Remember: Claude Code runs on your Mac. If your Mac"
 echo -e "  falls asleep, Claude can't receive your Telegram messages."
@@ -340,24 +434,30 @@ echo -e "  ${DIM}If you're on a laptop and unplug it, normal sleep"
 echo -e "  behavior resumes. This only applies when charging.${NC}"
 echo ""
 echo -e "  ${YELLOW}This requires your Mac password (the one you use to log in).${NC}"
+echo -e "  ${DIM}Type it when prompted — the cursor won't move, that's normal.${NC}"
 echo ""
 
-sudo pmset -c sleep 0 displaysleep 30 2>/dev/null && \
-  success "Mac will stay awake when plugged in" || \
-  echo -e "  ${YELLOW}Couldn't set this automatically. No worries — you can do it\n  in System Settings > Energy Saver. Set 'Prevent automatic\n  sleeping when the display is off' to On.${NC}"
+sudo -v </dev/tty 2>/dev/null && sudo pmset -c sleep 0 displaysleep 30 2>/dev/null && \
+  success "Mac will stay awake when plugged in" || {
+  echo ""
+  echo -e "  ${YELLOW}Couldn't set this automatically. No worries!${NC}"
+  echo -e "  ${YELLOW}You can do it manually:${NC}"
+  echo -e "  ${DIM}  System Settings > Energy Saver (or Battery > Options)${NC}"
+  echo -e "  ${DIM}  Turn on: 'Prevent automatic sleeping when the display is off'${NC}"
+}
 
-teaching_moment "Your Mac now knows to stay awake when it's plugged in.\n  This means Claude is always ready to receive your messages,\n  even at 3am. The display still sleeps to save your screen,\n  but the brain stays on."
+teaching_moment "Your Mac now knows to stay awake when it's plugged in.\n  This means Claude is always ready to receive your messages,\n  even at 3am. The display still sleeps to save your screen,\n  but the brain stays on.\n\n  ${DIM}Tip: if you typed your password and nothing seemed to happen,\n  that's normal — macOS hides password input for security.${NC}"
 
 wait_for_user
 
 # ============================================================================
-# STEP 6: Auto-Start Claude on Login
+# STEP 7: Auto-Start Claude on Login
 # ============================================================================
-CURRENT_STEP=6
+CURRENT_STEP=7
 clear_screen
 header
 
-echo -e "  ${BOLD}Step 6: Auto-Start${NC}"
+echo -e "  ${BOLD}Step 7: Auto-Start${NC}"
 echo ""
 echo -e "  What if your Mac restarts (after an update, a power"
 echo -e "  outage, etc.)? You'd have to open Terminal and type"
@@ -371,12 +471,18 @@ echo -e "  ${DIM}macOS calls these 'Launch Agents.' They're like alarm"
 echo -e "  clocks for programs — they go off at a specific time"
 echo -e "  (in this case, when you log in).${NC}"
 echo ""
+echo -e "  ${DIM}Note: auto-start only works after you've signed in to"
+echo -e "  Claude Code and set up Telegram (the next step).${NC}"
+echo ""
 
 LAUNCH_AGENTS="$HOME/Library/LaunchAgents"
 PLIST="$LAUNCH_AGENTS/com.claude.telegram.plist"
 mkdir -p "$LAUNCH_AGENTS"
 
-cat > "$PLIST" << EOF
+# Use full expanded path (not $HOME) in the plist so launchd resolves it
+USER_HOME="$HOME"
+
+cat > "$PLIST" << PLISTEOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -385,7 +491,7 @@ cat > "$PLIST" << EOF
     <string>com.claude.telegram</string>
     <key>ProgramArguments</key>
     <array>
-        <string>$HOME/.bun/bin/claude</string>
+        <string>${USER_HOME}/.bun/bin/claude</string>
         <string>--channels</string>
         <string>plugin:telegram:telegram</string>
     </array>
@@ -394,49 +500,53 @@ cat > "$PLIST" << EOF
     <key>KeepAlive</key>
     <true/>
     <key>StandardOutPath</key>
-    <string>$HOME/.claude/telegram-stdout.log</string>
+    <string>${USER_HOME}/.claude/telegram-stdout.log</string>
     <key>StandardErrorPath</key>
-    <string>$HOME/.claude/telegram-stderr.log</string>
+    <string>${USER_HOME}/.claude/telegram-stderr.log</string>
     <key>EnvironmentVariables</key>
     <dict>
         <key>PATH</key>
-        <string>$HOME/.bun/bin:/usr/local/bin:/usr/bin:/bin</string>
+        <string>${USER_HOME}/.bun/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
         <key>HOME</key>
-        <string>$HOME</string>
+        <string>${USER_HOME}</string>
     </dict>
     <key>WorkingDirectory</key>
-    <string>$HOME</string>
+    <string>${USER_HOME}</string>
 </dict>
 </plist>
-EOF
+PLISTEOF
+
+# Make sure the .claude directory exists for logs
+mkdir -p "$HOME/.claude"
 
 success "Auto-start rule created"
 
-teaching_moment "We created a small file that macOS reads on login.\n  It says: 'Start Claude Code with Telegram.'\n\n  If Claude ever crashes, macOS will restart it automatically\n  (that's what 'KeepAlive' means). You don't have to babysit it."
+teaching_moment "We created a small file that macOS reads on login.\n  It says: 'Start Claude Code with Telegram.'\n\n  If Claude ever crashes, macOS will restart it automatically\n  (that's what 'KeepAlive' means). You don't have to babysit it.\n\n  ${DIM}The auto-start kicks in after you complete the Telegram\n  setup in the next step and restart your Mac (or log out/in).${NC}"
 
 wait_for_user
 
 # ============================================================================
-# STEP 7: Next Steps
+# STEP 8: Next Steps
 # ============================================================================
-CURRENT_STEP=7
+CURRENT_STEP=8
 clear_screen
 header
 
-echo -e "  ${BOLD}Step 7: You're All Set! 🎉${NC}"
+echo -e "  ${BOLD}Step 8: You're All Set! 🎉${NC}"
 echo ""
 echo -e "  Everything is installed. Here's what we did:"
 echo ""
 echo -e "  ${GREEN}✓${NC} Developer tools (the foundation)"
 echo -e "  ${GREEN}✓${NC} Bun (the engine)"
 echo -e "  ${GREEN}✓${NC} Claude Code (the AI builder)"
+echo -e "  ${GREEN}✓${NC} GitHub (where your code lives)"
 echo -e "  ${GREEN}✓${NC} Terminal in your Dock + shortcuts"
 echo -e "  ${GREEN}✓${NC} Mac stays awake when plugged in"
 echo -e "  ${GREEN}✓${NC} Auto-start on login"
 echo ""
 echo -e "  ${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
-echo -e "  ${BOLD}Now, the fun part. Three things left to do by hand:${NC}"
+echo -e "  ${BOLD}Now, the fun part. Two things left to do by hand:${NC}"
 echo ""
 echo -e "  ${BLUE}${BOLD}1. Sign in to Claude Code${NC}"
 echo -e "     Open a ${BOLD}new${NC} Terminal window and type:"
@@ -444,25 +554,33 @@ echo -e "     ${GREEN}claude${NC}"
 echo -e "     Follow the prompts to log in with your Claude.ai account."
 echo -e "     Then type ${GREEN}/quit${NC} to exit."
 echo ""
-echo -e "  ${BLUE}${BOLD}2. Create your Telegram bot${NC}"
-echo -e "     Open Telegram on your phone."
-echo -e "     Search for ${BOLD}@BotFather${NC}"
-echo -e "     Send: ${GREEN}/newbot${NC}"
-echo -e "     Pick a name and username."
-echo -e "     Copy the token it gives you."
+echo -e "  ${BLUE}${BOLD}2. Set up Telegram${NC}"
 echo ""
-echo -e "  ${BLUE}${BOLD}3. Connect Telegram to Claude${NC}"
-echo -e "     In Terminal, type: ${GREEN}claude${NC}"
-echo -e "     Then type: ${GREEN}/telegram:configure${NC}"
-echo -e "     Paste your bot token."
-echo -e "     Then: ${GREEN}/telegram:access${NC} to pair your account."
+echo -e "     ${BOLD}Create your bot:${NC}"
+echo -e "     a) Open Telegram on your phone"
+echo -e "     b) Search for ${BOLD}@BotFather${NC} (it has a blue checkmark)"
+echo -e "     c) Send the message: ${GREEN}/newbot${NC}"
+echo -e "     d) Pick a name (e.g., 'My Claude Bot')"
+echo -e "     e) Pick a username (must end in 'bot', e.g., 'kevin_claude_bot')"
+echo -e "     f) BotFather will give you a ${BOLD}token${NC} — it looks like a long"
+echo -e "        string of numbers and letters. Copy it."
+echo ""
+echo -e "     ${BOLD}Connect it to Claude:${NC}"
+echo -e "     g) In Terminal, type: ${GREEN}claude${NC}"
+echo -e "     h) Then type: ${GREEN}/telegram:configure${NC}"
+echo -e "     i) Paste your bot token when it asks"
+echo -e "     j) Then type: ${GREEN}/telegram:access${NC}"
+echo -e "     k) Follow the prompts to pair your Telegram account"
+echo -e "     l) Type ${GREEN}/quit${NC} to exit Claude Code"
 echo ""
 echo -e "  ${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
-echo -e "  Once that's done, open a new Terminal and type:"
+echo -e "  ${BOLD}Once that's done:${NC}"
+echo ""
+echo -e "  Open a new Terminal window and type:"
 echo -e "  ${GREEN}${BOLD}start-claude${NC}"
 echo ""
-echo -e "  Then message your bot on Telegram:"
+echo -e "  Then message your bot on Telegram. Try something like:"
 echo -e "  ${BOLD}\"Create a React app called hello-world and deploy it to Vercel\"${NC}"
 echo ""
 echo -e "  And watch it happen. From your phone. 📱✨"
