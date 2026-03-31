@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="banner.svg" alt="Build With Claude — Build apps from your phone" width="100%"/>
+</p>
+
 # Build With Claude
 
 **A step-by-step guide for non-technical people to build apps from their phone.**
