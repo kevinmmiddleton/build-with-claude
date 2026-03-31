@@ -130,6 +130,18 @@ echo ""
 echo -e "  ${YELLOW}You can ask questions at any point. There are no dumb questions.${NC}"
 echo -e "  ${YELLOW}If something doesn't make sense, that's on the guide, not on you.${NC}"
 echo ""
+echo -e "  ${BOLD}Before we start, let's make sure you have:${NC}"
+echo ""
+echo -e "  ${BOLD}[ ]${NC} A Claude.ai account with a ${BOLD}Pro${NC} (\$20/mo) or ${BOLD}Max${NC} (\$100/mo) plan"
+echo -e "      ${DIM}Sign up at claude.ai if you don't have one${NC}"
+echo -e "  ${BOLD}[ ]${NC} Telegram installed on your phone"
+echo -e "      ${DIM}Free from the App Store${NC}"
+echo -e "  ${BOLD}[ ]${NC} Your Mac plugged in to power"
+echo -e "      ${DIM}Some installs take a few minutes${NC}"
+echo ""
+echo -e "  ${YELLOW}Got all three? Press Enter to begin.${NC}"
+echo -e "  ${DIM}(If you need to set up Claude.ai or Telegram first, type 'q')${NC}"
+
 wait_for_user
 
 # ============================================================================
@@ -526,15 +538,15 @@ teaching_moment "We created a small file that macOS reads on login.\n  It says: 
 wait_for_user
 
 # ============================================================================
-# STEP 8: Next Steps
+# STEP 8: Guided Manual Steps
 # ============================================================================
 CURRENT_STEP=8
 clear_screen
 header
 
-echo -e "  ${BOLD}Step 8: You're All Set! 🎉${NC}"
+echo -e "  ${BOLD}Step 8: The Finish Line${NC}"
 echo ""
-echo -e "  Everything is installed. Here's what we did:"
+echo -e "  Everything is installed! Here's what we set up:"
 echo ""
 echo -e "  ${GREEN}✓${NC} Developer tools (the foundation)"
 echo -e "  ${GREEN}✓${NC} Bun (the engine)"
@@ -544,54 +556,179 @@ echo -e "  ${GREEN}✓${NC} Terminal in your Dock + shortcuts"
 echo -e "  ${GREEN}✓${NC} Mac stays awake when plugged in"
 echo -e "  ${GREEN}✓${NC} Auto-start on login"
 echo ""
+echo -e "  Now we need to do a few things together that I can't"
+echo -e "  automate — signing in and connecting Telegram."
+echo ""
+echo -e "  ${YELLOW}I'll walk you through each one. Ready?${NC}"
+
+wait_for_user
+
+# --- 8a: Sign in to Claude ---
+clear_screen
+header
+
+echo -e "  ${BOLD}Step 8a: Sign in to Claude Code${NC}"
+echo ""
+echo -e "  We need to open a ${BOLD}new${NC} Terminal window for this."
+echo ""
+echo -e "  Here's how:"
+echo -e "  1. Look at your Dock (bottom of the screen)"
+echo -e "  2. Click the Terminal icon (it looks like a black screen)"
+echo -e "  3. A new window opens"
+echo -e "  4. Type: ${GREEN}claude${NC}"
+echo -e "  5. Press Enter"
+echo ""
+echo -e "  Claude will open a browser window asking you to sign in"
+echo -e "  with your Claude.ai account. Sign in, then come back here."
+echo ""
+echo -e "  ${DIM}If you don't have a Claude.ai account yet, go to${NC}"
+echo -e "  ${DIM}claude.ai and sign up. You'll need a Pro ($20/mo) or${NC}"
+echo -e "  ${DIM}Max ($100/mo) plan.${NC}"
+echo ""
+echo -e "  ${YELLOW}After you've signed in to Claude Code, type /quit in"
+echo -e "  that Terminal window to close it, then come back here.${NC}"
+echo ""
+echo -e "  ${YELLOW}Press Enter when you've completed this step.${NC}"
+read -r </dev/tty
+
+success "Claude Code sign-in complete!"
+
+teaching_moment "You just linked your Claude.ai account to Claude Code\n  on this Mac. You only need to do this once — it remembers\n  you across Terminal sessions and restarts."
+
+wait_for_user
+
+# --- 8b: Create Telegram bot ---
+clear_screen
+header
+
+echo -e "  ${BOLD}Step 8b: Create Your Telegram Bot${NC}"
+echo ""
+echo -e "  Now let's create your personal AI bot on Telegram."
+echo -e "  Grab your phone — this part happens there."
+echo ""
+echo -e "  ${BOLD}On your phone:${NC}"
+echo ""
+echo -e "  1. Open ${BOLD}Telegram${NC}"
+echo -e "     ${DIM}(download it from the App Store if you don't have it)${NC}"
+echo ""
+echo -e "  2. Search for ${BOLD}@BotFather${NC}"
+echo -e "     ${DIM}Look for the one with a blue checkmark — that's the real one${NC}"
+echo ""
+echo -e "  3. Send this message: ${GREEN}/newbot${NC}"
+echo ""
+echo -e "  4. BotFather asks for a ${BOLD}name${NC} — type anything friendly"
+echo -e "     ${DIM}Example: My Claude Bot${NC}"
+echo ""
+echo -e "  5. BotFather asks for a ${BOLD}username${NC} — must end in 'bot'"
+echo -e "     ${DIM}Example: yourname_claude_bot${NC}"
+echo ""
+echo -e "  6. BotFather replies with a ${BOLD}token${NC} — a long string like:"
+echo -e "     ${DIM}7123456789:AAHx1234567890abcdefghijklmnop${NC}"
+echo ""
+echo -e "  ${YELLOW}${BOLD}Copy that token.${NC} ${YELLOW}You'll need it in the next step.${NC}"
+echo ""
+echo -e "  ${YELLOW}Press Enter when you've got the token copied.${NC}"
+read -r </dev/tty
+
+success "Bot created!"
+
+teaching_moment "You just created a Telegram bot. Right now it's empty —\n  it doesn't do anything yet. In the next step, we'll\n  connect it to Claude Code so it becomes your AI builder."
+
+wait_for_user
+
+# --- 8c: Connect Telegram to Claude ---
+clear_screen
+header
+
+echo -e "  ${BOLD}Step 8c: Connect Telegram to Claude Code${NC}"
+echo ""
+echo -e "  Almost there! Now we connect your bot to Claude Code."
+echo ""
+echo -e "  ${BOLD}Open a new Terminal window${NC} and do these steps:"
+echo ""
+echo -e "  1. Type: ${GREEN}claude${NC}"
+echo -e "     ${DIM}(Claude Code starts up)${NC}"
+echo ""
+echo -e "  2. Type: ${GREEN}/telegram:configure${NC}"
+echo -e "     ${DIM}(This tells Claude about your bot)${NC}"
+echo ""
+echo -e "  3. It will ask for your bot token"
+echo -e "     ${BOLD}Paste the token${NC} you copied from BotFather"
+echo -e "     ${DIM}(Cmd+V to paste)${NC}"
+echo ""
+echo -e "  4. Type: ${GREEN}/telegram:access${NC}"
+echo -e "     ${DIM}(This pairs your Telegram account)${NC}"
+echo ""
+echo -e "  5. Follow the prompts — it will ask you to message"
+echo -e "     your bot on Telegram to verify it's you"
+echo ""
+echo -e "  6. When it confirms pairing, type: ${GREEN}/quit${NC}"
+echo ""
+echo -e "  ${YELLOW}Press Enter when you've completed all of these steps.${NC}"
+read -r </dev/tty
+
+success "Telegram connected!"
+
+teaching_moment "Your Telegram bot is now connected to Claude Code.\n  When you message the bot, it goes to your Mac, Claude\n  processes it, and replies back on Telegram."
+
+wait_for_user
+
+# --- 8d: First launch ---
+clear_screen
+header
+
+echo -e "  ${BOLD}Step 8d: Launch! 🚀${NC}"
+echo ""
+echo -e "  This is it. The moment of truth."
+echo ""
+echo -e "  ${BOLD}Open a new Terminal window${NC} and type:"
+echo ""
+echo -e "     ${GREEN}${BOLD}start-claude${NC}"
+echo ""
+echo -e "  You should see Claude Code start up with Telegram"
+echo -e "  connected. Leave this Terminal window open — it's now"
+echo -e "  your always-on AI builder."
+echo ""
+echo -e "  ${BOLD}Now open Telegram on your phone${NC} and message your bot."
+echo ""
+echo -e "  Try something simple:"
+echo -e "  ${BOLD}\"Hi! Tell me what you can do.\"${NC}"
+echo ""
+echo -e "  ${YELLOW}Press Enter when Claude has replied on Telegram.${NC}"
+read -r </dev/tty
+
+clear_screen
+echo ""
+echo ""
+echo -e "${GREEN}${BOLD}  ╭─────────────────────────────────────────╮${NC}"
+echo -e "${GREEN}${BOLD}  │                                         │${NC}"
+echo -e "${GREEN}${BOLD}  │  🎉 You did it!                         │${NC}"
+echo -e "${GREEN}${BOLD}  │                                         │${NC}"
+echo -e "${GREEN}${BOLD}  │  You can now build apps from your phone. │${NC}"
+echo -e "${GREEN}${BOLD}  │                                         │${NC}"
+echo -e "${GREEN}${BOLD}  ╰─────────────────────────────────────────╯${NC}"
+echo ""
+echo ""
+echo -e "  ${BOLD}What to try next:${NC}"
+echo ""
+echo -e "  Message your bot on Telegram with something like:"
+echo ""
+echo -e "  • ${BOLD}\"Create a personal website with my name and bio\"${NC}"
+echo -e "  • ${BOLD}\"Build a to-do app where I can add and check off tasks\"${NC}"
+echo -e "  • ${BOLD}\"Make a link saver where I can paste URLs and tag them\"${NC}"
+echo ""
+echo -e "  Start small. Add features as you go."
+echo -e "  The best way to learn is to build something you actually want."
+echo ""
 echo -e "  ${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
-echo -e "  ${BOLD}Now, the fun part. Two things left to do by hand:${NC}"
+echo -e "  ${BOLD}Your shortcuts:${NC}"
+echo -e "  ${GREEN}start-claude${NC}   Start Claude + Telegram"
+echo -e "  ${GREEN}update-claude${NC}  Update Claude Code"
 echo ""
-echo -e "  ${BLUE}${BOLD}1. Sign in to Claude Code${NC}"
-echo -e "     Open a ${BOLD}new${NC} Terminal window and type:"
-echo -e "     ${GREEN}claude${NC}"
-echo -e "     Follow the prompts to log in with your Claude.ai account."
-echo -e "     Then type ${GREEN}/quit${NC} to exit."
+echo -e "  ${BOLD}Stuck?${NC}"
+echo -e "  • Ask Claude in Telegram — it can troubleshoot itself"
+echo -e "  • Guide: ${BLUE}github.com/kevinmmiddleton/build-with-claude${NC}"
 echo ""
-echo -e "  ${BLUE}${BOLD}2. Set up Telegram${NC}"
-echo ""
-echo -e "     ${BOLD}Create your bot:${NC}"
-echo -e "     a) Open Telegram on your phone"
-echo -e "     b) Search for ${BOLD}@BotFather${NC} (it has a blue checkmark)"
-echo -e "     c) Send the message: ${GREEN}/newbot${NC}"
-echo -e "     d) Pick a name (e.g., 'My Claude Bot')"
-echo -e "     e) Pick a username (must end in 'bot', e.g., 'kevin_claude_bot')"
-echo -e "     f) BotFather will give you a ${BOLD}token${NC} — it looks like a long"
-echo -e "        string of numbers and letters. Copy it."
-echo ""
-echo -e "     ${BOLD}Connect it to Claude:${NC}"
-echo -e "     g) In Terminal, type: ${GREEN}claude${NC}"
-echo -e "     h) Then type: ${GREEN}/telegram:configure${NC}"
-echo -e "     i) Paste your bot token when it asks"
-echo -e "     j) Then type: ${GREEN}/telegram:access${NC}"
-echo -e "     k) Follow the prompts to pair your Telegram account"
-echo -e "     l) Type ${GREEN}/quit${NC} to exit Claude Code"
-echo ""
-echo -e "  ${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo ""
-echo -e "  ${BOLD}Once that's done:${NC}"
-echo ""
-echo -e "  Open a new Terminal window and type:"
-echo -e "  ${GREEN}${BOLD}start-claude${NC}"
-echo ""
-echo -e "  Then message your bot on Telegram. Try something like:"
-echo -e "  ${BOLD}\"Create a React app called hello-world and deploy it to Vercel\"${NC}"
-echo ""
-echo -e "  And watch it happen. From your phone. 📱✨"
-echo ""
-echo -e "  ${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo ""
-echo -e "  ${DIM}Stuck? That's normal. Here are your options:${NC}"
-echo -e "  ${DIM}• Ask Claude in Telegram — it can troubleshoot itself${NC}"
-echo -e "  ${DIM}• Check the guide: github.com/kevinmmiddleton/build-with-claude${NC}"
-echo -e "  ${DIM}• Open an issue on the GitHub repo${NC}"
-echo ""
-echo -e "  ${YELLOW}The best way to learn is to build something you actually want.${NC}"
-echo -e "  ${YELLOW}Start small. Add features as you go. You've got this.${NC}"
+echo -e "  ${YELLOW}You've got this. Happy building! 🛠️${NC}"
 echo ""
