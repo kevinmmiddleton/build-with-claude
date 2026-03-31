@@ -88,6 +88,62 @@ teaching_moment() {
 }
 
 # ---------------------------------------------------------------------------
+# Setup journal — writes a CLAUDE.md that tracks setup progress
+# ---------------------------------------------------------------------------
+SETUP_FILE="$HOME/.claude/CLAUDE.md"
+
+write_setup_file() {
+  mkdir -p "$HOME/.claude"
+  cat > "$SETUP_FILE" << SETUPEOF
+# My Setup — Build With Claude
+
+> This file tracks your setup progress. Claude Code reads it automatically
+> so it knows what's configured and can help you if you get stuck.
+>
+> Last updated: $(date '+%Y-%m-%d %H:%M')
+
+## Setup Status
+
+| Step | Status |
+|------|--------|
+| Developer Tools (Xcode CLI) | ${SETUP_XCODE:-⏳ Pending} |
+| Bun (JavaScript runtime) | ${SETUP_BUN:-⏳ Pending} |
+| Claude Code | ${SETUP_CLAUDE:-⏳ Pending} |
+| GitHub CLI | ${SETUP_GITHUB:-⏳ Pending} |
+| Terminal shortcuts | ${SETUP_SHORTCUTS:-⏳ Pending} |
+| Mac energy settings | ${SETUP_ENERGY:-⏳ Pending} |
+| Auto-start on login | ${SETUP_AUTOSTART:-⏳ Pending} |
+| Claude Code sign-in | ${SETUP_SIGNIN:-⏳ Pending} |
+| Telegram bot created | ${SETUP_BOT:-⏳ Pending} |
+| Telegram connected | ${SETUP_TELEGRAM:-⏳ Pending} |
+| First message sent | ${SETUP_FIRST_MSG:-⏳ Pending} |
+
+## Accounts
+
+| Service | Status | What It's For |
+|---------|--------|---------------|
+| Claude.ai | ${ACCT_CLAUDE:-❓ Unknown} | AI builder (required) |
+| GitHub | ${ACCT_GITHUB:-❓ Not set up} | Code storage |
+| Supabase | ${ACCT_SUPABASE:-❓ Not set up} | Database + auth |
+| Vercel | ${ACCT_VERCEL:-❓ Not set up} | Deployment |
+| Sentry | ${ACCT_SENTRY:-❓ Not set up} | Error tracking |
+| Stripe | ${ACCT_STRIPE:-❓ Not set up} | Payments |
+| Resend | ${ACCT_RESEND:-❓ Not set up} | Email |
+
+## Quick Reference
+
+- Start Claude + Telegram: \`start-claude\`
+- Update Claude Code: \`update-claude\`
+- Guide: https://github.com/kevinmmiddleton/build-with-claude
+
+## Notes
+
+If you're reading this and something isn't set up yet, tell Claude:
+"Help me finish my setup — check my CLAUDE.md for what's pending."
+SETUPEOF
+}
+
+# ---------------------------------------------------------------------------
 # Pre-flight
 # ---------------------------------------------------------------------------
 if [[ "$(uname)" != "Darwin" ]]; then
@@ -166,6 +222,7 @@ echo ""
 
 if xcode-select -p &>/dev/null; then
   success "Already installed! Your Mac has the developer tools."
+  SETUP_XCODE="✅ Installed"
   teaching_moment "These were already on your machine — maybe from a previous setup.\n  Either way, you're good to go."
 else
   echo -e "  ${YELLOW}Installing now...${NC}"
@@ -180,6 +237,7 @@ else
   read -r </dev/tty
   # Verify it actually installed
   if xcode-select -p &>/dev/null; then
+    SETUP_XCODE="✅ Installed"
     success "Developer tools installed!"
   else
     echo -e "  ${RED}Hmm, it doesn't look like the installation finished.${NC}"
@@ -213,6 +271,7 @@ echo -e "  works without it.${NC}"
 echo ""
 
 if command -v bun &>/dev/null; then
+  SETUP_BUN="✅ Installed ($(bun --version))"
   success "Bun is already installed! (version $(bun --version))"
   teaching_moment "Bun was already on your machine. Nothing to do here."
 else
@@ -222,6 +281,7 @@ else
   export BUN_INSTALL="$HOME/.bun"
   export PATH="$BUN_INSTALL/bin:$PATH"
   echo ""
+  SETUP_BUN="✅ Installed ($(bun --version))"
   success "Bun installed! (version $(bun --version))"
   teaching_moment "Bun is now installed on your Mac. It lives in a hidden\n  folder called .bun in your home directory. You'll never\n  need to open that folder — just know it's there."
 fi
@@ -259,6 +319,7 @@ if command -v claude &>/dev/null; then
   echo ""
   echo -e "  ${YELLOW}Updating to the latest version...${NC}"
   bun update -g @anthropic-ai/claude-code 2>/dev/null || true
+  SETUP_CLAUDE="✅ Installed"
   success "Updated!"
   teaching_moment "Claude Code was already installed. We updated it to\n  make sure you have the latest features and fixes."
 else
@@ -266,6 +327,7 @@ else
   echo ""
   bun install -g @anthropic-ai/claude-code
   echo ""
+  SETUP_CLAUDE="✅ Installed"
   success "Claude Code installed!"
   teaching_moment "Claude Code is now a command on your Mac. When you\n  type 'claude' in Terminal, it starts up. We'll do\n  that in a moment, but first let's finish setting up."
 fi
@@ -292,6 +354,8 @@ echo -e "  ${BOLD}You → Claude → GitHub → Vercel → Live app${NC}"
 echo ""
 
 if command -v gh &>/dev/null && gh auth status &>/dev/null 2>&1; then
+  SETUP_GITHUB="✅ Connected"
+  ACCT_GITHUB="✅ Connected"
   success "GitHub CLI is installed and you're logged in!"
   teaching_moment "You're already set up with GitHub. Claude can push\n  code on your behalf."
 else
@@ -333,6 +397,8 @@ else
   }
 
   if gh auth status &>/dev/null 2>&1; then
+    SETUP_GITHUB="✅ Connected"
+    ACCT_GITHUB="✅ Connected"
     success "Logged in to GitHub!"
     teaching_moment "Claude can now push code to GitHub on your behalf.\n  Every app you build will have its own 'repository' (folder)\n  on GitHub. You can see all your projects at github.com."
   else
@@ -418,6 +484,7 @@ fi
 WELCOME
 fi
 
+SETUP_SHORTCUTS="✅ Done"
 success "Shortcuts created"
 success "Welcome message added"
 
@@ -450,7 +517,8 @@ echo -e "  ${DIM}Type it when prompted — the cursor won't move, that's normal.
 echo ""
 
 sudo -v </dev/tty 2>/dev/null && sudo pmset -c sleep 0 displaysleep 30 2>/dev/null && \
-  success "Mac will stay awake when plugged in" || {
+  SETUP_ENERGY="✅ Configured" && success "Mac will stay awake when plugged in" || {
+  SETUP_ENERGY="⚠️ Manual setup needed"
   echo ""
   echo -e "  ${YELLOW}Couldn't set this automatically. No worries!${NC}"
   echo -e "  ${YELLOW}You can do it manually:${NC}"
@@ -531,7 +599,11 @@ PLISTEOF
 # Make sure the .claude directory exists for logs
 mkdir -p "$HOME/.claude"
 
+SETUP_AUTOSTART="✅ Configured"
 success "Auto-start rule created"
+
+# Write progress so far
+write_setup_file
 
 teaching_moment "We created a small file that macOS reads on login.\n  It says: 'Start Claude Code with Telegram.'\n\n  If Claude ever crashes, macOS will restart it automatically\n  (that's what 'KeepAlive' means). You don't have to babysit it.\n\n  ${DIM}The auto-start kicks in after you complete the Telegram\n  setup in the next step and restart your Mac (or log out/in).${NC}"
 
@@ -591,6 +663,9 @@ echo ""
 echo -e "  ${YELLOW}Press Enter when you've completed this step.${NC}"
 read -r </dev/tty
 
+SETUP_SIGNIN="✅ Signed in"
+ACCT_CLAUDE="✅ Pro/Max plan"
+write_setup_file
 success "Claude Code sign-in complete!"
 
 teaching_moment "You just linked your Claude.ai account to Claude Code\n  on this Mac. You only need to do this once — it remembers\n  you across Terminal sessions and restarts."
@@ -630,6 +705,8 @@ echo ""
 echo -e "  ${YELLOW}Press Enter when you've got the token copied.${NC}"
 read -r </dev/tty
 
+SETUP_BOT="✅ Created"
+write_setup_file
 success "Bot created!"
 
 teaching_moment "You just created a Telegram bot. Right now it's empty —\n  it doesn't do anything yet. In the next step, we'll\n  connect it to Claude Code so it becomes your AI builder."
@@ -667,6 +744,8 @@ echo ""
 echo -e "  ${YELLOW}Press Enter when you've completed all of these steps.${NC}"
 read -r </dev/tty
 
+SETUP_TELEGRAM="✅ Connected"
+write_setup_file
 success "Telegram connected!"
 
 teaching_moment "Your Telegram bot is now connected to Claude Code.\n  When you message the bot, it goes to your Mac, Claude\n  processes it, and replies back on Telegram."
@@ -696,6 +775,9 @@ echo -e "  ${BOLD}\"Hi! Tell me what you can do.\"${NC}"
 echo ""
 echo -e "  ${YELLOW}Press Enter when Claude has replied on Telegram.${NC}"
 read -r </dev/tty
+
+SETUP_FIRST_MSG="✅ Sent!"
+write_setup_file
 
 clear_screen
 echo ""
