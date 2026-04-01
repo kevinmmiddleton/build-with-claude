@@ -23,7 +23,7 @@ DIM='\033[2m'
 BOLD='\033[1m'
 NC='\033[0m'
 
-TOTAL_STEPS=8
+TOTAL_STEPS=9
 CURRENT_STEP=0
 
 # ---------------------------------------------------------------------------
@@ -655,15 +655,127 @@ teaching_moment "We created a small file that macOS reads on login.\n  It says: 
 wait_for_user
 
 # ============================================================================
-# STEP 8: Guided Manual Steps
+# STEP 8: Set Up Your Pipeline (Vercel + Supabase)
 # ============================================================================
 CURRENT_STEP=8
 clear_screen
 header
 
-echo -e "  ${BOLD}Step 8: The Finish Line${NC}"
+echo -e "  ${BOLD}Step 8: Your App Pipeline${NC}"
 echo ""
-echo -e "  Everything is installed! Here's what we set up:"
+echo -e "  Right now Claude can write code and push it to GitHub."
+echo -e "  But to make a real app that people can visit, we need"
+echo -e "  two more pieces:"
+echo ""
+echo -e "  ${BOLD}Vercel${NC} — takes your code from GitHub and puts it on the internet."
+echo -e "  ${DIM}Every time Claude pushes code, Vercel automatically updates"
+echo -e "  your live app. No manual steps.${NC}"
+echo ""
+echo -e "  ${BOLD}Supabase${NC} — gives your app a database, user accounts, and storage."
+echo -e "  ${DIM}If your app needs users to sign up, save data, or upload files,"
+echo -e "  Supabase handles all of that.${NC}"
+echo ""
+echo -e "  ${BOLD}The pipeline:${NC}"
+echo -e "  You message Telegram → Claude writes code → pushes to GitHub → Vercel deploys → Live app"
+echo ""
+echo -e "  ${DIM}Both are free to start. You won't need a credit card.${NC}"
+
+wait_for_user
+
+# --- 8a: Vercel ---
+clear_screen
+header
+
+echo -e "  ${BOLD}Step 9a: Set Up Vercel${NC}"
+echo ""
+echo -e "  Vercel is what puts your app on the internet."
+echo -e "  It watches your GitHub repo and every time new code"
+echo -e "  is pushed, it automatically rebuilds and deploys."
+echo ""
+echo -e "  ${BOLD}Here's what to do:${NC}"
+echo ""
+echo -e "  1. Open your browser and go to ${BOLD}vercel.com${NC}"
+echo ""
+echo -e "  2. Click ${BOLD}\"Sign Up\"${NC}"
+echo ""
+echo -e "  3. Choose ${BOLD}\"Continue with GitHub\"${NC}"
+echo -e "     ${DIM}This connects Vercel to your GitHub account so it"
+echo -e "     can read your code and deploy it.${NC}"
+echo ""
+echo -e "  4. Authorize Vercel when GitHub asks"
+echo ""
+echo -e "  5. That's it for now! You don't need to import a project yet."
+echo -e "     ${DIM}When Claude creates your first app, it will push to GitHub."
+echo -e "     Then you'll come back to Vercel and click 'Import Project'.${NC}"
+echo ""
+echo -e "  ${YELLOW}Press Enter when you've signed up for Vercel.${NC}"
+read -r </dev/tty
+
+ACCT_VERCEL="✅ Account created"
+write_setup_file
+success "Vercel account ready!"
+
+teaching_moment "Vercel is now connected to your GitHub. When Claude\n  pushes code to a repo, you'll import it in Vercel and\n  every future push deploys automatically. Zero effort.\n\n  ${DIM}Your apps will get a free URL like: your-app.vercel.app${NC}"
+
+wait_for_user
+
+# --- 8b: Supabase ---
+clear_screen
+header
+
+echo -e "  ${BOLD}Step 9b: Set Up Supabase${NC}"
+echo ""
+echo -e "  Supabase is the backend for your app — it handles"
+echo -e "  the stuff you can't see: user accounts, saved data,"
+echo -e "  file uploads, and more."
+echo ""
+echo -e "  ${DIM}Think of it as a filing cabinet for your app. Users sign in,"
+echo -e "  their data gets stored, and it's all organized and secure.${NC}"
+echo ""
+echo -e "  ${BOLD}Here's what to do:${NC}"
+echo ""
+echo -e "  1. Open your browser and go to ${BOLD}supabase.com${NC}"
+echo ""
+echo -e "  2. Click ${BOLD}\"Start your project\"${NC}"
+echo ""
+echo -e "  3. Sign up with ${BOLD}GitHub${NC} (same account you just used)"
+echo ""
+echo -e "  4. Create a new project:"
+echo -e "     • Pick a name (anything — e.g., 'my-first-app')"
+echo -e "     • Set a database password (save this somewhere safe!)"
+echo -e "     • Choose a region close to you"
+echo -e "     • Click 'Create new project'"
+echo ""
+echo -e "  5. Wait for it to finish setting up (~30 seconds)"
+echo ""
+echo -e "  6. Go to ${BOLD}Settings > API${NC} in the left sidebar"
+echo -e "     You'll see:"
+echo -e "     • ${BOLD}Project URL${NC} — starts with https://"
+echo -e "     • ${BOLD}anon public key${NC} — a long string"
+echo -e "     ${DIM}You don't need to copy these now. When Claude builds"
+echo -e "     your app, it'll ask you for them.${NC}"
+echo ""
+echo -e "  ${YELLOW}Press Enter when you've created your Supabase project.${NC}"
+read -r </dev/tty
+
+ACCT_SUPABASE="✅ Project created"
+write_setup_file
+success "Supabase project ready!"
+
+teaching_moment "Your app now has a database. When Claude builds\n  features like user accounts or saving data, it'll\n  connect to this Supabase project. You'll just need\n  to paste the URL and key when Claude asks for them."
+
+wait_for_user
+
+# ============================================================================
+# STEP 9: Guided Manual Steps
+# ============================================================================
+CURRENT_STEP=9
+clear_screen
+header
+
+echo -e "  ${BOLD}Step 9: The Finish Line${NC}"
+echo ""
+echo -e "  Everything is set up! Here's what we did:"
 echo ""
 echo -e "  ${GREEN}✓${NC} Developer tools (the foundation)"
 echo -e "  ${GREEN}✓${NC} Bun (the engine)"
@@ -672,6 +784,8 @@ echo -e "  ${GREEN}✓${NC} GitHub (where your code lives)"
 echo -e "  ${GREEN}✓${NC} Terminal in your Dock + shortcuts"
 echo -e "  ${GREEN}✓${NC} Mac stays awake when plugged in"
 echo -e "  ${GREEN}✓${NC} Auto-start on login"
+echo -e "  ${GREEN}✓${NC} Vercel (automatic deployment)"
+echo -e "  ${GREEN}✓${NC} Supabase (database + auth)"
 echo ""
 echo -e "  Now we need to do a few things together that I can't"
 echo -e "  automate — signing in and connecting Telegram."
@@ -684,7 +798,7 @@ wait_for_user
 clear_screen
 header
 
-echo -e "  ${BOLD}Step 8a: Sign in to Claude Code${NC}"
+echo -e "  ${BOLD}Step 9a: Sign in to Claude Code${NC}"
 echo ""
 echo -e "  We need to open a ${BOLD}new${NC} Terminal window for this."
 echo ""
@@ -721,7 +835,7 @@ wait_for_user
 clear_screen
 header
 
-echo -e "  ${BOLD}Step 8b: Create Your Telegram Bot${NC}"
+echo -e "  ${BOLD}Step 9b: Create Your Telegram Bot${NC}"
 echo ""
 echo -e "  Now let's create your personal AI bot on Telegram."
 echo -e "  Grab your phone — this part happens there."
@@ -762,7 +876,7 @@ wait_for_user
 clear_screen
 header
 
-echo -e "  ${BOLD}Step 8c: Connect Telegram to Claude Code${NC}"
+echo -e "  ${BOLD}Step 9c: Connect Telegram to Claude Code${NC}"
 echo ""
 echo -e "  Almost there! Now we connect your bot to Claude Code."
 echo ""
@@ -801,7 +915,7 @@ wait_for_user
 clear_screen
 header
 
-echo -e "  ${BOLD}Step 8d: Launch! 🚀${NC}"
+echo -e "  ${BOLD}Step 9d: Launch! 🚀${NC}"
 echo ""
 echo -e "  This is it. The moment of truth."
 echo ""
