@@ -262,4 +262,4 @@ The best way to learn is to build something you actually want.
 
 ---
 
-*Built by [Kevin Middleton](https://github.com/kevinmmiddleton). Questions? Open an issue.*
+*Built by [Kevin Middleton](https://github.com/kevinmmiddleton).*
