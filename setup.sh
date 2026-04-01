@@ -113,17 +113,9 @@ handle_error() {
   echo -e "  ${RED}$error_msg${NC}"
   echo ""
   echo -e "  ${YELLOW}This has been logged to: ~/.claude/setup-errors.log${NC}"
-  echo -e "  ${YELLOW}Want to report this so we can fix it?${NC}"
   echo ""
-  echo -e "  ${DIM}Type 'y' to open a GitHub issue, or Enter to skip.${NC}"
-  read -r report </dev/tty
-  if [[ "$report" == "y" || "$report" == "Y" ]]; then
-    local encoded_title
-    encoded_title=$(python3 -c "import urllib.parse; print(urllib.parse.quote('Setup error at: $step'))" 2>/dev/null || echo "Setup+error")
-    local encoded_body
-    encoded_body=$(python3 -c "import urllib.parse; print(urllib.parse.quote('**Step:** $step\n**Error:** $error_msg\n**macOS:** $(sw_vers -productVersion 2>/dev/null || echo unknown)\n**Date:** $(date)\n\n**What happened:**\n(describe what you saw)\n'))" 2>/dev/null || echo "")
-    open "https://github.com/kevinmmiddleton/build-with-claude/issues/new?title=${encoded_title}&body=${encoded_body}&labels=setup-error" 2>/dev/null || echo -e "  ${DIM}Visit: github.com/kevinmmiddleton/build-with-claude/issues${NC}"
-  fi
+  echo -e "  ${DIM}Don't worry — once Telegram is set up, you can paste${NC}"
+  echo -e "  ${DIM}the error log to Claude and it can help troubleshoot.${NC}"
 }
 
 # ---------------------------------------------------------------------------

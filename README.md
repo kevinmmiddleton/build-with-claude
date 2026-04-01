@@ -213,7 +213,7 @@ After setup, you have these commands in Terminal:
 
 **Something else went wrong?**
 - The setup script logs errors automatically to `~/.claude/setup-errors.log`
-- [Open an issue](https://github.com/kevinmmiddleton/build-with-claude/issues/new?template=setup-error.md) and paste the log — we'll help you fix it
+- Ask Claude in Telegram to help — paste the error log and it can troubleshoot
 
 ---
 
