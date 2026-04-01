@@ -211,6 +211,10 @@ After setup, you have these commands in Terminal:
 - Or: "Make a link saver where I can paste URLs and tag them"
 - You can always add features later. Start small.
 
+**Something else went wrong?**
+- The setup script logs errors automatically to `~/.claude/setup-errors.log`
+- [Open an issue](https://github.com/kevinmmiddleton/build-with-claude/issues/new?template=setup-error.md) and paste the log — we'll help you fix it
+
 ---
 
 ## Glossary

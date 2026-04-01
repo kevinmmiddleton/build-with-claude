@@ -88,6 +88,45 @@ teaching_moment() {
 }
 
 # ---------------------------------------------------------------------------
+# Error logging — captures failures to help debug later
+# ---------------------------------------------------------------------------
+ERROR_LOG="$HOME/.claude/setup-errors.log"
+
+log_error() {
+  local step="$1"
+  local error_msg="$2"
+  mkdir -p "$HOME/.claude"
+  echo "---" >> "$ERROR_LOG"
+  echo "timestamp: $(date '+%Y-%m-%d %H:%M:%S')" >> "$ERROR_LOG"
+  echo "step: $step" >> "$ERROR_LOG"
+  echo "macOS: $(sw_vers -productVersion 2>/dev/null || echo 'unknown')" >> "$ERROR_LOG"
+  echo "error: $error_msg" >> "$ERROR_LOG"
+  echo "" >> "$ERROR_LOG"
+}
+
+handle_error() {
+  local step="$1"
+  local error_msg="$2"
+  log_error "$step" "$error_msg"
+  echo ""
+  echo -e "  ${RED}Something went wrong at: $step${NC}"
+  echo -e "  ${RED}$error_msg${NC}"
+  echo ""
+  echo -e "  ${YELLOW}This has been logged to: ~/.claude/setup-errors.log${NC}"
+  echo -e "  ${YELLOW}Want to report this so we can fix it?${NC}"
+  echo ""
+  echo -e "  ${DIM}Type 'y' to open a GitHub issue, or Enter to skip.${NC}"
+  read -r report </dev/tty
+  if [[ "$report" == "y" || "$report" == "Y" ]]; then
+    local encoded_title
+    encoded_title=$(python3 -c "import urllib.parse; print(urllib.parse.quote('Setup error at: $step'))" 2>/dev/null || echo "Setup+error")
+    local encoded_body
+    encoded_body=$(python3 -c "import urllib.parse; print(urllib.parse.quote('**Step:** $step\n**Error:** $error_msg\n**macOS:** $(sw_vers -productVersion 2>/dev/null || echo unknown)\n**Date:** $(date)\n\n**What happened:**\n(describe what you saw)\n'))" 2>/dev/null || echo "")
+    open "https://github.com/kevinmmiddleton/build-with-claude/issues/new?title=${encoded_title}&body=${encoded_body}&labels=setup-error" 2>/dev/null || echo -e "  ${DIM}Visit: github.com/kevinmmiddleton/build-with-claude/issues${NC}"
+  fi
+}
+
+# ---------------------------------------------------------------------------
 # Setup journal — writes a CLAUDE.md that tracks setup progress
 # ---------------------------------------------------------------------------
 SETUP_FILE="$HOME/.claude/CLAUDE.md"
@@ -277,12 +316,15 @@ if command -v bun &>/dev/null; then
 else
   echo -e "  ${YELLOW}Installing Bun now...${NC}"
   echo ""
-  curl -fsSL https://bun.sh/install | bash
-  export BUN_INSTALL="$HOME/.bun"
-  export PATH="$BUN_INSTALL/bin:$PATH"
-  echo ""
-  SETUP_BUN="✅ Installed ($(bun --version))"
-  success "Bun installed! (version $(bun --version))"
+  if curl -fsSL https://bun.sh/install | bash; then
+    export BUN_INSTALL="$HOME/.bun"
+    export PATH="$BUN_INSTALL/bin:$PATH"
+    echo ""
+    SETUP_BUN="✅ Installed ($(bun --version))"
+    success "Bun installed! (version $(bun --version))"
+  else
+    handle_error "Install Bun" "curl install script failed"
+  fi
   teaching_moment "Bun is now installed on your Mac. It lives in a hidden\n  folder called .bun in your home directory. You'll never\n  need to open that folder — just know it's there."
 fi
 
@@ -325,10 +367,13 @@ if command -v claude &>/dev/null; then
 else
   echo -e "  ${YELLOW}Installing Claude Code now...${NC}"
   echo ""
-  bun install -g @anthropic-ai/claude-code
-  echo ""
-  SETUP_CLAUDE="✅ Installed"
-  success "Claude Code installed!"
+  if bun install -g @anthropic-ai/claude-code; then
+    echo ""
+    SETUP_CLAUDE="✅ Installed"
+    success "Claude Code installed!"
+  else
+    handle_error "Install Claude Code" "bun install failed"
+  fi
   teaching_moment "Claude Code is now a command on your Mac. When you\n  type 'claude' in Terminal, it starts up. We'll do\n  that in a moment, but first let's finish setting up."
 fi
 
