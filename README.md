@@ -133,6 +133,10 @@ Start Claude with Telegram:
 start-claude
 ```
 
+> **Why does the setup use `--dangerously-skip-permissions`?**
+>
+> When Claude runs with Telegram, it needs to create files, run commands, and deploy your app — all without you sitting at the keyboard clicking "approve" for every step. The `--dangerously-skip-permissions` flag lets Claude do its work autonomously so you can build from your phone. You're still in control: you can see everything Claude does in Terminal, and you can stop it anytime by closing the Terminal window or typing `/quit`. The name sounds scary, but it just means "don't ask me to approve every single action."
+
 Now open Telegram on your phone and message your bot. Try:
 
 > "Create a new React app with Supabase auth. Deploy it to Vercel."

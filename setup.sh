@@ -502,7 +502,7 @@ if ! grep -q 'update-claude' "$ZSHRC" 2>/dev/null; then
   echo '' >> "$ZSHRC"
   echo '# Claude Code shortcuts' >> "$ZSHRC"
   echo 'alias update-claude="bun update -g @anthropic-ai/claude-code && echo \"✓ Claude Code updated!\""' >> "$ZSHRC"
-  echo 'alias start-claude="claude --channels plugin:telegram:telegram"' >> "$ZSHRC"
+  echo 'alias start-claude="claude --channels plugin:telegram:telegram --dangerously-skip-permissions"' >> "$ZSHRC"
 fi
 
 if ! grep -q 'Build With Claude' "$ZSHRC" 2>/dev/null; then
@@ -611,6 +611,7 @@ cat > "$PLIST" << PLISTEOF
         <string>${USER_HOME}/.bun/bin/claude</string>
         <string>--channels</string>
         <string>plugin:telegram:telegram</string>
+        <string>--dangerously-skip-permissions</string>
     </array>
     <key>RunAtLoad</key>
     <true/>
