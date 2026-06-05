@@ -12,6 +12,18 @@ This guide walks you through setting up Claude Code with Telegram so you can des
 
 ---
 
+## The easy way: use the Cowork plugin
+
+If you have [Cowork](https://www.claude.ai/cowork), the plugin walks you through every step below interactively from inside Claude.
+
+**Download:** [build-with-claude.plugin](https://github.com/kevinmmiddleton/build-with-claude/releases/latest/download/build-with-claude.plugin)
+
+Drag the file into Cowork (or go to **Settings → Capabilities → Install plugin**), then say "set me up to build with Claude from my phone."
+
+If you'd rather follow this guide yourself in Terminal, continue with the Quick Start below.
+
+---
+
 ## Quick Start
 
 Open Terminal on your Mac and paste this:
