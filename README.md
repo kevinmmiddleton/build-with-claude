@@ -22,6 +22,8 @@ Drag the file into Cowork (or go to **Settings → Capabilities → Install plug
 
 If you'd rather follow this guide yourself in Terminal, continue with the Quick Start below.
 
+The plugin's source lives in [`skills/`](skills/) and [`.claude-plugin/`](.claude-plugin/) in this repo; the release asset is built from it.
+
 ---
 
 ## Quick Start

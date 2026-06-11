@@ -1,0 +1,10 @@
+{
+  "name": "build-with-claude",
+  "version": "0.1.1",
+  "license": "MIT",
+  "description": "An in-Cowork guide that walks non-technical people through setting up Claude Code with Telegram so they can build apps from their phone. Trigger by saying you want to build apps from your phone, set up Claude Code with Telegram, or any variation.",
+  "author": {
+    "name": "Kevin Middleton"
+  },
+  "keywords": ["claude code", "telegram", "phone", "non-technical", "build apps", "setup", "guide"]
+}
